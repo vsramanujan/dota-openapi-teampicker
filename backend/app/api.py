@@ -1,18 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import openai
+import csv
+from io import StringIO
 
-
-todos = [
-    {
-        "id": "1",
-        "item": "Read a book."
-    },
-    {
-        "id": "2",
-        "item": "Cycle around town."
-    }
-]
-
+openai.organization = "org-0UjCDso2b7GIHvHREYwFMQLF"
+openai.api_key = "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"
 
 app = FastAPI()
 
@@ -30,48 +23,37 @@ app.add_middleware(
         allow_headers=["*"]
 )
 
-
-@app.get("/", tags=["root"])
-async def read_root() -> dict:
-    return {"message": "Welcome to your todo list."}
-
-
-@app.get("/todo", tags=["todos"])
-async def get_todos() -> dict:
-    return { "data": todos }
-
-
-@app.post("/todo", tags=["todos"])
-async def add_todo(todo: dict) -> dict:
-    todos.append(todo)
-    return {
-        "data": { "Todo added." }
-    }
+@app.get("/pick", tags=["pick"])
+async def get_todos(data: dict) -> dict:
+    print(', '.join(data['enemy_picks']))
+    print(', '.join(data['my_picks']))
+    hero_picks = openai.Completion.create(
+        model="text-davinci-003",
+        prompt='''
+        Oponent team : {}
+        My team : {}
+        Suggest 5 hero to pick along with rating for picking in the following csv format : Hero Name, Rating from 0 to 10, Reason, Which oponent hero name it counters
+        '''.format(', '.join(data['enemy_picks']), ', '.join(data['my_picks']) ),
+        max_tokens=500,
+        temperature=0.5
+    )['choices'][0]['text']
 
 
-@app.put("/todo/{id}", tags=["todos"])
-async def update_todo(id: int, body: dict) -> dict:
-    for todo in todos:
-        if int(todo["id"]) == id:
-            todo["item"] = body["item"]
-            return {
-                "data": f"Todo with id {id} has been updated."
-            }
+    print(hero_picks)
 
-    return {
-        "data": f"Todo with id {id} not found."
-    }
+    csv_file = StringIO(hero_picks)
+    reader = csv.reader(csv_file)
 
+    data = []
+    for row in reader:
+        if row == []:
+            continue
 
-@app.delete("/todo/{id}", tags=["todos"])
-async def delete_todo(id: int) -> dict:
-    for todo in todos:
-        if int(todo["id"]) == id:
-            todos.remove(todo)
-            return {
-                "data": f"Todo with id {id} has been removed."
-            }
-
-    return {
-        "data": f"Todo with id {id} not found."
-    }
+        data.append({
+            'name': row[0].strip(),
+            'rating': row[1].strip(),
+            'reason': row[2].strip(),
+            'counters' : row[3].strip()
+        })
+    
+    return data
