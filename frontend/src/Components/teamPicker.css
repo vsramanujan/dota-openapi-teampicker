@@ -23,3 +23,7 @@
 .hero.selected:hover {
     cursor: unset;
 }
+
+.hero.suggestion {
+    outline: 5px solid red;
+}

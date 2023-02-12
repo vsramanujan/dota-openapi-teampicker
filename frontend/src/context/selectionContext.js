@@ -7,6 +7,7 @@ const DEFAULT_STATE = {
   youSelected: [],
   toPick: PLAYERS.ENEMY,
   suggestions: {},
+  loading: false,
 };
 
 const SelectionContext = React.createContext({});
@@ -40,11 +41,21 @@ function reducer(state, action) {
     case ACTIONS.RESET: {
       return DEFAULT_STATE;
     }
+    case ACTIONS.API_CALL_BEGIN: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
     case ACTIONS.API_CALL_END_SUCCESS: {
-      return state;
+      return {
+        ...state,
+        suggestions: action.payload,
+        loading: false,
+      };
     }
     case ACTIONS.API_CALL_END_FAILURE: {
-      return state;
+      return { ...state, suggestions: {}, loading: false };
     }
     default: {
       return state;

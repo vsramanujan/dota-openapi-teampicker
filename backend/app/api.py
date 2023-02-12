@@ -5,7 +5,7 @@ import json
 
 
 openai.organization = "org-0UjCDso2b7GIHvHREYwFMQLF"
-openai.api_key = "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"
+openai.api_key = "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"
 
 app = FastAPI()
 
@@ -25,6 +25,7 @@ app.add_middleware(
 
 @app.post("/pick", tags=["pick"])
 async def post_todos(data: dict) -> dict:
+    print("Starting to fetch hero reccos")
     hero_picks = openai.Completion.create(
         model="text-davinci-003",
         prompt='''
@@ -37,5 +38,9 @@ async def post_todos(data: dict) -> dict:
         temperature=0.5
     )['choices'][0]['text']
 
-    print(hero_picks)
-    return json.loads(hero_picks)
+    # sorted_hero_picks = sorted(json.loads(hero_picks), )
+    # print(sorted_hero_picks)
+    hero_picks_json = json.loads(hero_picks)
+    print(hero_picks_json, hero_picks_json['hero_suggestions'])
+    hero_picks_json['hero_suggestions'] = sorted(hero_picks_json['hero_suggestions'],key=lambda x: x['rating'], reverse=True)
+    return hero_picks_json
