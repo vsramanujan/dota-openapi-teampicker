@@ -52,17 +52,22 @@ function CategoryHeroes({ heroes, type }) {
           type: ACTIONS.API_CALL_BEGIN,
         });
 
-        const response = await axios.post("http://localhost:8000/pick", {
-          enemy_picks: newEnemySelected,
-          my_picks: newYouSelected,
-        });
+        try {
+          const response = await axios.post("http://localhost:8000/pick", {
+            enemy_picks: newEnemySelected,
+            my_picks: newYouSelected,
+          });
+          console.log("derp response", response);
 
-        console.log("derp response", response);
-
-        dispatch({
-          type: ACTIONS.API_CALL_END,
-          payload: {},
-        });
+          dispatch({
+            type: ACTIONS.API_CALL_END_SUCCESS,
+            payload: {},
+          });
+        } catch (err) {
+          dispatch({
+            type: ACTIONS.API_CALL_END_FAILURE,
+          });
+        }
       }}
     />
   ));

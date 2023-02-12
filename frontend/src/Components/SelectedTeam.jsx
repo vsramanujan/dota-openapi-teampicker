@@ -17,7 +17,7 @@ function SelectedTeam({ team }) {
   return (
     <div>
       {team.map((hero) => (
-        <img src={`/images/${hero}.jpg`} height={100} alt={hero} />
+        <img key={hero} src={`/images/${hero}.jpg`} height={100} alt={hero} />
       ))}
     </div>
   );

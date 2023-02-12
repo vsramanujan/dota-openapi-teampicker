@@ -16,7 +16,8 @@ export const ACTIONS = {
   PICK_HERO: "PICK_HERO",
   RESET: "RESET",
   API_CALL_BEGIN: "API_CALL_BEGIN",
-  API_CALL_END: "API_CALL_END",
+  API_CALL_END_SUCCESS: "API_CALL_END_SUCCESS",
+  API_CALL_END_FAILURE: "API_CALL_END_FAILURE",
 };
 
 function reducer(state, action) {
@@ -39,8 +40,14 @@ function reducer(state, action) {
     case ACTIONS.RESET: {
       return DEFAULT_STATE;
     }
+    case ACTIONS.API_CALL_END_SUCCESS: {
+      return state;
+    }
+    case ACTIONS.API_CALL_END_FAILURE: {
+      return state;
+    }
     default: {
-      return state
+      return state;
     }
   }
 }
