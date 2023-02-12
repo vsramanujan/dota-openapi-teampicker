@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import openai
-import csv
-from io import StringIO
 import json
 
 
@@ -25,8 +23,8 @@ app.add_middleware(
         allow_headers=["*"]
 )
 
-@app.get("/pick", tags=["pick"])
-async def get_todos(data: dict) -> dict:
+@app.post("/pick", tags=["pick"])
+async def post_todos(data: dict) -> dict:
     hero_picks = openai.Completion.create(
         model="text-davinci-003",
         prompt='''

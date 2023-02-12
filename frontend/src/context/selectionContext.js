@@ -5,7 +5,8 @@ const DEFAULT_STATE = {
   selectedMap: {},
   enemySelected: [],
   youSelected: [],
-  toPick: PLAYERS.YOU,
+  toPick: PLAYERS.ENEMY,
+  suggestions: {},
 };
 
 const SelectionContext = React.createContext({});
@@ -14,6 +15,8 @@ export const ACTIONS = {
   TOGGLE_PICK: "TOGGLE_PICK",
   PICK_HERO: "PICK_HERO",
   RESET: "RESET",
+  API_CALL_BEGIN: "API_CALL_BEGIN",
+  API_CALL_END: "API_CALL_END",
 };
 
 function reducer(state, action) {
@@ -25,16 +28,19 @@ function reducer(state, action) {
       };
     }
     case ACTIONS.PICK_HERO: {
-      const hero = action.payload.hero;
+      const { hero, youSelected, enemySelected } = action.payload;
       const newState = { ...state };
-      if (state.toPick === PLAYERS.ENEMY) {
-        newState.enemySelected.push(hero);
-      } else newState.youSelected.push(hero);
+      newState.enemySelected = enemySelected;
+      newState.youSelected = youSelected;
       newState.selectedMap[hero] = `selected ${state.toPick}`;
+      newState.suggestions = {};
       return newState;
     }
     case ACTIONS.RESET: {
       return DEFAULT_STATE;
+    }
+    default: {
+      return state
     }
   }
 }

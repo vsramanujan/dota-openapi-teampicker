@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import Header from "./Components/Header";
 import SelectedTeams from "./Components/SelectedTeam";
@@ -17,4 +17,6 @@ function App() {
 }
 
 const rootElement = document.getElementById("root");
-render(<App />, rootElement);
+
+const root = createRoot(rootElement);
+root.render(<App />);
