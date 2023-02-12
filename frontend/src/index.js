@@ -2,14 +2,17 @@ import React from "react";
 import { render } from "react-dom";
 
 import Header from "./Components/Header";
-import Todos from "./Components/Todos";
+import SelectedTeams from "./Components/SelectedTeam";
+import TeamPicker from "./Components/TeamPicker";
+import { SelectionContextProvider } from "./context/selectionContext";
 
 function App() {
   return (
-    <>
+    <SelectionContextProvider>
       <Header />
-      <Todos />
-    </>
+      <SelectedTeams />
+      <TeamPicker />
+    </SelectionContextProvider>
   );
 }
 

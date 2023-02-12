@@ -1,0 +1,4 @@
+.selected-teams {
+    display: flex;
+    justify-content: space-between;
+}

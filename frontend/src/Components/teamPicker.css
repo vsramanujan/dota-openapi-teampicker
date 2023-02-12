@@ -1,0 +1,25 @@
+.hero:hover {
+    scale: 1.5;
+    transition: all;
+    border-radius: 5px;
+    outline: 1px solid white;
+    cursor: pointer;
+}
+
+.hero.selected {
+    opacity: 0.5;
+}
+
+.hero.selected.You {
+    background-color: 2px solid #0070ba;
+}
+
+.hero.selected:hover {
+    scale: 1;
+    border-radius: 0;
+    outline: none;
+}
+
+.hero.selected:hover {
+    cursor: unset;
+}
